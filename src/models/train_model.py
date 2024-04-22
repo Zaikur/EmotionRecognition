@@ -67,10 +67,5 @@ for epoch in range(10):  # Number of epochs
             print(f'Epoch {epoch+1}, Loss: {loss.item()}')
             f.write(f'Epoch {epoch+1}, Loss: {loss.item()}\n')
 
-    
-    # Save model checkpoint to file
-    with open('F:/PythonProjects/EmotionRecognition/data/training_loss.txt', 'a') as f:
-        f.write(f'Epoch {epoch+1}, Loss: {loss.item()}\n')
-
 # Save model
 torch.save(model.state_dict(), 'emotion_recognition_model.pth')
