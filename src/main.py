@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from models.emotion_model import EmotionClassifier
 
 # Emotion labels dictionary
-emotion_labels = {0: "Angry", 1: "Disgust", 2: "Fear", 3: "Happy", 4: "Neutral", 5: "Sad", 6: "Surprise"}
+emotion_labels = {0: "Angry", 1: "Happy", 2: "Neutral", 3: "Sad", 4: "Surprise"}
 
 # Load the trained model
 model = EmotionClassifier()
@@ -35,7 +35,10 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Detect faces in the frame
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+    # Scale factor - Parameter specifying how much the image size is reduced at each image scale.
+    # Min neighbors - Parameter specifying how many neighbors each candidate rectangle should have to retain it.
+    # Min size - Minimum possible object size. Objects smaller than this are ignored.
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(100, 100), flags=cv2.CASCADE_SCALE_IMAGE)
 
     # Draw rectangles around each face and predict emotions
     for (x, y, w, h) in faces:

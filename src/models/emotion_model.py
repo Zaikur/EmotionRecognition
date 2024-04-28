@@ -9,18 +9,19 @@ import torch.optim as optim
 class EmotionClassifier(nn.Module):
     def __init__(self):
         super(EmotionClassifier, self).__init__()
-        # Define the layers of the model
         self.layers = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
+            nn.Dropout(0.25),  # Dropout layer added
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Flatten(),
             nn.Linear(64 * 12 * 12, 256),
             nn.ReLU(),
-            nn.Linear(256, 7)  # 7 emotions
+            nn.Dropout(0.5),  # Dropout layer added
+            nn.Linear(256, 5)  # 5 emotions
         )
 
     def forward(self, x):

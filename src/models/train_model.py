@@ -1,8 +1,7 @@
 # Quinton Nelson
 # 4/22/2024
-# This script trains a convolutional neural network model for emotion recognition using PyTorch. 
-# The script loads the preprocessed data from .npy files, creates a simple CNN model, defines the loss function and optimizer, 
-# and trains the model for a specified number of epochs. The trained model is then saved to a file for future use. 
+# This script trains a simple convolutional neural network (CNN) model for emotion recognition using the FER2013 dataset.
+
 
 import sys
 sys.path.insert(1, 'src/data')
@@ -26,13 +25,15 @@ class SimpleCNN(nn.Module):
             nn.Conv2d(1, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
+            nn.Dropout(0.25),  # Dropout layer
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Flatten(),
             nn.Linear(64 * 12 * 12, 256),
             nn.ReLU(),
-            nn.Linear(256, 7)  # 7 emotions
+            nn.Dropout(0.5),  # Dropout layer
+            nn.Linear(256, 5)  # 5 emotions
         )
     
     def forward(self, x):
@@ -44,7 +45,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-for epoch in range(10):  # Number of epochs
+for epoch in range(11):  # Number of epochs
     for imgs, labels in dataloader:
         outputs = model(imgs)
         loss = criterion(outputs, labels)
@@ -53,19 +54,10 @@ for epoch in range(10):  # Number of epochs
         loss.backward()
         optimizer.step()
     
-    # Save model checkpoint to file, overwriting existing file
-    with open('F:/PythonProjects/EmotionRecognition/data/training_loss.txt', 'w') as f:
-        for epoch in range(10):  # Number of epochs
-            for imgs, labels in dataloader:
-                outputs = model(imgs)
-                loss = criterion(outputs, labels)
-
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-
-            print(f'Epoch {epoch+1}, Loss: {loss.item()}')
-            f.write(f'Epoch {epoch+1}, Loss: {loss.item()}\n')
+    # Log the loss at the end of each epoch
+    print(f'Epoch {epoch+1}, Loss: {loss.item()}')
+    with open('F:/PythonProjects/EmotionRecognition/data/training_loss.txt', 'a') as f:
+        f.write(f'Epoch {epoch+1}, Loss: {loss.item()}\n')
 
 # Save model
 torch.save(model.state_dict(), 'emotion_recognition_model.pth')
