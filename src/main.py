@@ -1,3 +1,8 @@
+# Quinton Nelson
+# 4/22/2024
+# Main script for running the emotion recognition model on a live video stream from a webcam.
+
+
 import cv2
 import torch
 from torchvision import transforms
